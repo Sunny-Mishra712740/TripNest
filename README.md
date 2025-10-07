@@ -1,6 +1,6 @@
 # 🏡 TripNest
 
-*TripNest* is a modern, full-stack web platform that connects travelers with hosts offering unique stays and experiences — inspired by Airbnb.  
+*TripNest* is a modern, full-stack web platform that connects travelers with hosts offering unique stays and experiences inspired by Airbnb.  
 It enables users to *discover, book, and host* accommodations seamlessly across the globe.
 
 ---
