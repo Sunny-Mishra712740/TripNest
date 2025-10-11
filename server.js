@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const server_config = require("./configs/server.config");
 const db_config = require("./configs/db.config");
 const Listing = require("./models/listing.model")
+const path = require("path")
 
 // Connection with mongodb
 
@@ -19,13 +20,14 @@ db.once("open", () => {
 });
 
 
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"))
+
+
 app.get("/listings", async (req, res) => {
     const allListings = await Listing.find({});
-    res.render("index.ejs", {allListings})
+    res.render("listings.views/index", {allListings})
 })
-
-
-
 
 
 
