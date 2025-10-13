@@ -30,7 +30,16 @@ app.get("/listings", async (req, res) => {
     res.render("listings.views/index", {allListings})
 })
 
-// Show Route
+
+// New Listing route
+
+app.get("/listing/new", (req, res) => {
+    
+})
+
+
+
+// Show Listing Route
 
 app.get("/listings/:id", async (req, res) => {
     let {id} = req.params;
