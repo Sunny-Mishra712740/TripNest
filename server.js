@@ -1,10 +1,10 @@
-const express  = require("express");
+const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const server_config = require("./configs/server.config");
 const db_config = require("./configs/db.config");
-const Listing = require("./models/listing.model")
-const path = require("path")
+const Listing = require("./models/listing.model");
+const path = require("path");
 
 // Connection with mongodb
 
@@ -12,41 +12,57 @@ mongoose.connect(db_config.DB_URL);
 const db = mongoose.connection;
 
 db.on("error", () => {
-    console.log("Error while connecting to the MongoDB",error)
+  console.log("Error while connecting to the MongoDB", error);
 });
 
 db.once("open", () => {
-    console.log("Connected to MongoDB")
+  console.log("Connected to MongoDB");
 });
 
-
 app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views"))
-app.use(express.urlencoded({extended: true}));
-
+app.set("views", path.join(__dirname, "views"));
+app.use(express.urlencoded({ extended: true }));
 
 app.get("/listings", async (req, res) => {
-    const allListings = await Listing.find({});
-    res.render("listings.views/index", {allListings})
-})
-
+  const allListings = await Listing.find({});
+  res.render("listings.views/index", { allListings });
+});
 
 // New Listing route
 
-app.get("/listing/new", (req, res) => {
-    
+app.get("/listings/new", (req, res) => {
+  res.render("listings.views/new");
+});
+
+// Add Listing route
+app.post("/listings", async(req, res) => {
+    // let {title, description, image, price, country, location} = req.body;
+    const newListing = Listing(req.body.listing);
+    await newListing.save();
+    res.redirect("/listings")
 })
-
-
 
 // Show Listing Route
 
 app.get("/listings/:id", async (req, res) => {
-    let {id} = req.params;
-    const listing = await Listing.findById(id);
-    res.render("listings.views/show", {listing});
-})
+  const { id } = req.params;
 
+  // Prevent CastError
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).send("Invalid Listing ID");
+  }
+
+  try {
+    const listing = await Listing.findById(id);
+    if (!listing) return res.status(404).send("Listing not found");
+
+    res.render("listings.views/show", { listing });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server Error");
+  }
+});
 
 // app.get("/testListing", async(req,res) => {
 
@@ -63,9 +79,8 @@ app.get("/listings/:id", async (req, res) => {
 //     res.send("successfull testing");
 // },)
 
-
 // Starting the server
 
 app.listen(server_config.PORT, () => {
-    console.log(`Server is listening to port ${8080}`)
-})
+  console.log(`Server is listening to port ${8080}`);
+});
