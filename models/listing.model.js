@@ -20,7 +20,7 @@ const listingSchema = new Schema(
     image: {
       type: String,
       default: defaultImageUrl,
-      set: (v) => (!v ? defaultImageUrl : v),
+      set: (v) => (v === "" ? defaultImageUrl : v),
     },
     price: {
       type: Number,
@@ -37,8 +37,7 @@ const listingSchema = new Schema(
       required: true,
       trim: true,
     },
-  },
-  {timestamps: true,versionKey: false});
+  },{timestamps: true,versionKey: false});
 
 const Listing = mongoose.model("Listing", listingSchema);
 

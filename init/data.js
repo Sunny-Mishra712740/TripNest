@@ -102,5 +102,4 @@ const sampleListings = [
 ];
 
 
-
-module.exports = sampleListings;
+module.exports = { data : sampleListings };
